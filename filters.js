@@ -6,7 +6,7 @@ var Filters = {
     op_enums: {},
 
     get_field: function(field_name) {
-        $.grep(this.fields, function(el) { return el["name"] == field_name })[0]
+        return $.grep(this.fields, function(el) { return el["name"] == field_name })[0]
     },
 
     get_field_type: function(field_name) {
@@ -21,8 +21,8 @@ var Filters = {
     get_enum_op_for: function(field_name) {
         var type = this.get_field_type(field_name)
 
-        if (type)
-            return op_enums[type];
+        if (type != null)
+            return this.op_enums[type];
         else {
             alert("Can not find type for " + field_name)
         }
@@ -32,17 +32,24 @@ var Filters = {
         var idx = select.id.indexOf('_');
 
         var prefix = select.id.substring(0, idx)
-        var field_name = select.id.substring(idx + 1);
+        var id_op = "#" + prefix + "_op"
+        var op_select = $(id_op)[0];
 
-        // TODO if nothing is selected disable op && value
+        // if nothing is selected disable op && value
+        if (select.selectedIndex == 0) {
+            op_select.disabled = true;
+            $("#" + prefix + "_value").disabled = true;
+            $("#" +prefix + "_or_c").html("");
+            return;
+        }
+
+        var field_name = select.value;
 
         // fill op && enable
-        var op_enum = [["", ""]] + this.get_enum_op_for(field_name);
-        var id_op = "#" + prefix + "_op"
-        var op_select = $(id_op + " option").remove();
-
-        $.each(op_enum,  function(el) { $(id_op).add(new Option(el[0], el[1]))});
-        $(id_op).disabled = false;
+        var op_enum = [["", ""]].concat(this.get_enum_op_for(field_name));
+        $(id_op + " option").remove();
+        $.each(op_enum, function(idx, el) { op_select.add(new Option(el[1], el[0]))});
+        op_select.disabled = false;
 
         // fill value drop down if it is the case && enable
         var field = this.get_field(field_name);
@@ -53,7 +60,9 @@ var Filters = {
         }
 
         $("#" + prefix + "_value_c").html(html);
-        // TODO add OR button
+        // Add OR button
+        $("#" +prefix + "_or_c").html("<input type='button' id='" + prefix + "_or_bt' value='OR' />");
+        $("#" + prefix + "_or_bt").click(function(evt){ alert(evt.target.id) });
     },
 
     init_filters: function () {
