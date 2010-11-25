@@ -40,22 +40,25 @@
 
       <h2>Filters</h2>
 
-      <div id="fgroup1">
-      <input type="hidden" id="filters1_group" name="filters1[group]" value="1" />
+      <div id="filters">
+        <div id="fgroup1">
+          <div id="filters1">
+            <input type="hidden" id="filters1_group" name="filters1[group]" value="1" />
 
-      <select id="filters1_name" name="filters1[name]" onchange="Filters.activate_filter_op(this);">
-        <option value=""></option>
-        <option value="field1">Priority</option>
-      </select>
+            <select id="filters1_name" name="filters1[name]" onchange="Filters.activate_filter_op(this);">
+              <option value=""></option>
+              <option value="field1">Priority</option>
+            </select>
 
-      <select id="filters1_op" name="filters1[op]" disabled="disabled"></select>
+            <select id="filters1_op" name="filters1[op]" disabled="disabled"></select>
 
-      <span id="filters1_value_c">
-        <input id="filters1_value" name="filters1[value]" type="text" disabled="disabled" />
-      </span>
-      <span id="filters1_or_c"></span>
+            <span id="filters1_value_c">
+              <input id="filters1_value" name="filters1[value]" type="text" disabled="disabled" />
+            </span>
+            <span id="filters1_or_c"></span>
+          </div>
+        </div>
       </div>
-
     </div>
 
     <script src="jquery-1.4.4.pack.js" type="text/javascript"></script>

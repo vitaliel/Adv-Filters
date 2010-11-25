@@ -1,5 +1,10 @@
-= TODO
+= Advanced JS filters
 
-* Render fields on page load
-* Remove OR filter
+== TODO
+
 * Add AND button to create new filters group
+* Render fields on page load
+
+== DONE
+
+* Remove OR filter

@@ -4,7 +4,7 @@ var Filters = {
 
     // key = type, value => [[id1, value1], [id2, value2]]
     op_enums: {},
-    group_idx : 0,
+    group_idx : 1,
     filter_idx: 1,
 
     get_field: function(field_name) {
@@ -39,7 +39,7 @@ var Filters = {
         if (select.selectedIndex == 0) {
             op_select.disabled = true;
             $("#" + prefix + "_value")[0].disabled = true;
-            $("#" + prefix + "_or_c").html("");
+            $("#" + prefix + "_or_bt").remove();
             return;
         }
 
@@ -60,21 +60,27 @@ var Filters = {
         }
 
         $("#" + prefix + "_value_c").html(html);
-        // Add OR button
-        $("#" + prefix + "_or_c").html("<input type='button' id='" + prefix + "_or_bt' value='OR' />");
-        $("#" + prefix + "_or_bt").click(function(evt){ Filters.add_or_line(evt.target.id) });
+
+        // Add OR button if delete link is not present
+        if ($("#" + prefix + "_del").length == 0) {
+            $("#" + prefix + "_or_c").html("<input type='button' id='" + prefix + "_or_bt' value='OR' />");
+            $("#" + prefix + "_or_bt").click(function(evt){ Filters.add_or_line(evt.target.id) });
+        }
+
+        // Add AND button if it is last group and button does not exists
+        // TODO use group ID for button ID
+        if ($("#" + prefix + "_and").length == 0 && this.group_idx == parseInt($("#" + prefix + "_group").val())) {
+            $("#filters").append("<div><input type='button' id='"+prefix+"_and' onclick='Filters.add_and_line(this.id);' value='AND' /></div>");
+        }
     },
 
     el_prefix: function(el_id) {
         return el_id.substring(0, el_id.indexOf('_'));
     },
 
-    add_or_line: function(bt_or_id) {
-        var prefix = this.el_prefix(bt_or_id);
+    generate_filter_line: function(group_id) {
         this.filter_idx += 1;
-        // get group id
-        var group_id = $("#" + prefix + "_group")[0].value;
-        var html = '<div id="filter' + this.filter_idx + '">';
+        var html = '<div id="filters' + this.filter_idx + '">';
         // add field select
         html += "<select id='filters" + this.filter_idx + "_name' name='filters" + this.filter_idx + "[name]' onchange=\"Filters.activate_filter_op(this);\"></select>\n";
         // add group hidden field
@@ -87,14 +93,47 @@ var Filters = {
         html += "</span>";
         html += '<span id="filters' + this.filter_idx + '_or_c"></span>';
         html += "</div>";
-        $('#fgroup' + group_id).append(html);
+        return html;
+    },
 
-        // TODO replace OR with delete link
-
+    fill_filter_fields: function() {
         // add fields to select
-        field_select = $("#filters" + this.filter_idx + "_name")[0];
+        var field_select = $("#filters" + this.filter_idx + "_name")[0];
         field_select.add(new Option("",""));
         $.map(this.fields, function(el) {field_select.add(new Option(el["caption"], el["name"]))});
+    },
+
+    add_or_line: function(bt_or_id) {
+        var prefix = this.el_prefix(bt_or_id);
+        // get group id
+        var group_id = $("#" + prefix + "_group")[0].value;
+
+        $('#fgroup' + group_id).append(this.generate_filter_line(group_id));
+
+        // replace OR with delete link
+        $("#" + bt_or_id).remove();
+        $("#" + prefix + "_or_c").html("<a class='delete' href='#' onclick='Filters.delete_filter(this.id); return false;' id='" + prefix + "_del'>X</a>");
+
+        this.fill_filter_fields();
+    },
+
+    add_and_line: function(button_id) {
+        // remove button
+        $('#' +button_id).parent().html("AND");
+
+        // add new group with new ID
+        this.group_idx += 1;
+        var html = "<div id='fgroup" + this.group_idx + "'>";
+        html += this.generate_filter_line(this.group_idx);
+        html += "</div>";
+        console.log(html);
+        $("#filters").append(html);
+        this.fill_filter_fields();
+    },
+
+    delete_filter: function(link_id) {
+        var prefix = this.el_prefix(link_id);
+        $("#" + prefix).remove();
     },
 
     render: function() {
