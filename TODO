@@ -2,9 +2,9 @@
 
 == TODO
 
-* Add AND button to create new filters group
 * Render fields on page load
 
 == DONE
 
 * Remove OR filter
+* Add AND button to create new filters group

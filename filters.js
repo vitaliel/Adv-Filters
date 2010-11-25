@@ -68,9 +68,10 @@ var Filters = {
         }
 
         // Add AND button if it is last group and button does not exists
-        // TODO use group ID for button ID
-        if ($("#" + prefix + "_and").length == 0 && this.group_idx == parseInt($("#" + prefix + "_group").val())) {
-            $("#filters").append("<div><input type='button' id='"+prefix+"_and' onclick='Filters.add_and_line(this.id);' value='AND' /></div>");
+        var group_id = parseInt($("#" + prefix + "_group").val())
+
+        if ($("#fgroup" + group_id + "_and").length == 0 && this.group_idx == group_id) {
+            $("#filters").append("<div><input type='button' id='fgroup" + group_id + "_and' onclick='Filters.add_and_line(this.id);' value='AND' /></div>");
         }
     },
 
@@ -126,7 +127,6 @@ var Filters = {
         var html = "<div id='fgroup" + this.group_idx + "'>";
         html += this.generate_filter_line(this.group_idx);
         html += "</div>";
-        console.log(html);
         $("#filters").append(html);
         this.fill_filter_fields();
     },
