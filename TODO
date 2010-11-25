@@ -3,8 +3,14 @@
 == TODO
 
 * Render fields on page load
-
+** values
+** OR and delete links
+** last AND
 == DONE
+
+* Render fields on page load
+** fields
+** operators
 
 * Remove OR filter
 * Add AND button to create new filters group

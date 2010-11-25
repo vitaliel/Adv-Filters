@@ -23,7 +23,6 @@
               <option value="tickets.priority">Ticket Priority</option>
               <option value="tickets.created_on">Ticket Created At</option>
 
-
             </select>
           </td>
 
@@ -41,25 +40,25 @@
       <h2>Filters</h2>
 
       <div id="filters">
-        <div id="fgroup1">
-          <div id="filters1">
-            <input type="hidden" id="filters1_group" name="filters1[group]" value="1" />
-
-            <select id="filters1_name" name="filters1[name]" onchange="Filters.activate_filter_op(this);">
-              <option value=""></option>
-              <option value="field1">Priority</option>
-              <option value="field2">Interval</option>
-              <option value="field3">Type</option>
-            </select>
-
-            <select id="filters1_op" name="filters1[op]" disabled="disabled"></select>
-
-            <span id="filters1_value_c">
-              <input id="filters1_value" name="filters1[value]" type="text" disabled="disabled" />
-            </span>
-            <span id="filters1_or_c"></span>
-          </div>
-        </div>
+<!--        <div id="fgroup1">-->
+<!--          <div id="filters1">-->
+<!--            <input type="hidden" id="filters1_group" name="filters1[group]" value="1" />-->
+<!---->
+<!--            <select id="filters1_name" name="filters1[name]" onchange="Filters.activate_filter_op(this);">-->
+<!--              <option value=""></option>-->
+<!--              <option value="field1">Priority</option>-->
+<!--              <option value="field2">Interval</option>-->
+<!--              <option value="field3">Type</option>-->
+<!--            </select>-->
+<!---->
+<!--            <select id="filters1_op" name="filters1[op]" disabled="disabled"></select>-->
+<!---->
+<!--            <span id="filters1_value_c">-->
+<!--              <input id="filters1_value" name="filters1[value]" type="text" disabled="disabled" />-->
+<!--            </span>-->
+<!--            <span id="filters1_or_c"></span>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
     </div>
 
@@ -67,13 +66,20 @@
     <script src="filters.js" type="text/javascript"></script>
 
     <script type="text/javascript">
-      $(document).ready(Filters.init_filters());
       Filters.fields = [{"name": "field1", "caption": "Priority", "type": 0},
                         {"name": "field2", "caption": "Interval", "type": 1},
                         {"name": "field3", "caption": "Type",     "type": 0, "enum": "issue_type"},
                        ];
 Filters.op_enums = {0 : [[0, "is"], [1, "is not"]], 1 : [[0, "contains"], [1, "does not contain"]]};
 Filters.field_enums = {'issue_type': [['b', 'Bug'], ['f', "Feature"], ['e', 'Enhancement']]};
+Filters.filters = [
+  {'name': 'field2', 'op': 0, 'value': '53', 'group': 1},
+  {'name': 'field1', 'op': 0, 'value': '53', 'group': 1},
+  {'name': 'field3', 'op': 0, 'value': '53', 'group': 2},
+
+];
+      $(document).ready(Filters.init());
+
     </script>
   </body>
 </html>

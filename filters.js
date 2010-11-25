@@ -9,7 +9,8 @@ var Filters = {
     // Field enums, key = enum name, value: select options array
     field_enums: {},
     group_idx : 1,
-    filter_idx: 1,
+    filter_idx: 0,
+    filters: [], // filters to populate initial screen
 
     get_field: function(field_name) {
         return $.grep(this.fields, function(el) { return el["name"] == field_name })[0]
@@ -144,11 +145,66 @@ var Filters = {
         $("#" + prefix).remove();
     },
 
-    render: function() {
-
+    init: function() {
+        this.render();
+        this.init_field_selects();
     },
 
-    init_filters: function () {
+    render: function() {
+        if (this.filters.length == 0) {
+            this.filters = [{'name':'', 'op':'', 'value':'', 'group':1}];
+        }
+        
+        var group_id = null;
+        var html = '';
+        
+        // TODO render select field, operator, value
+        for(var i = 0; i < this.filters.length; i++) {
+        	var filter = this.filters[i];
+        	var cgroup_id = filter['group'];
+
+        	// is new group?
+        	if (cgroup_id != group_id) {
+        		if (group_id != null) {
+        			html += "</div><div>AND</div>";
+        		}
+        		group_id = cgroup_id;
+        		html += "<div id='fgroup" + group_id + "'>";
+        	}
+        	
+        	html += this.generate_filter_line(group_id);
+        	
+        }
+        
+        this.group_idx = group_id;
+        
+        $("#filters").html(html);
+        
+        // Set values for field, operator, value
+        for(var i = 0; i < this.filters.length; i++) {
+        	this.filter_idx = i + 1
+        	this.fill_filter_fields();
+        	var filter = this.filters[i];
+        	$('#filters' + this.filter_idx + '_name option').filter(function(idx, el){return el.value == filter['name']}).map(function(idx, el){el.selected = true})
+        	this.fill_select('#filters' + this.filter_idx + '_op', 
+        			this.get_enum_op_for(filter['name']),
+        			filter['op'],
+        			true
+        		)
+        }
+    },
+
+    fill_select: function(selector, options, selected_value, include_blank) {
+    	var elem = $(selector)[0];
+    	var arr = (include_blank ? [['', '']]: []).concat(options);
+    	
+    	if (elem) {
+    		$.each(arr, function(idx, el) { elem.add(new Option(el[1], el[0], selected_value == el[0], selected_value == el[0]))})
+    		elem.disabled = false;
+    	}
+    },
+    
+    init_field_selects: function () {
         $("#bt_selected_to_right").click(function() {
             if ($("#available_fields").val() == null) {
                 //alert("You need to select a contact to move to the right hand side.");
