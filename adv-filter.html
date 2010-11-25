@@ -48,6 +48,8 @@
             <select id="filters1_name" name="filters1[name]" onchange="Filters.activate_filter_op(this);">
               <option value=""></option>
               <option value="field1">Priority</option>
+              <option value="field2">Interval</option>
+              <option value="field3">Type</option>
             </select>
 
             <select id="filters1_op" name="filters1[op]" disabled="disabled"></select>
@@ -66,8 +68,12 @@
 
     <script type="text/javascript">
       $(document).ready(Filters.init_filters());
-      Filters.fields = [{"name":"field1", "caption":"Priority", "type": 0}, {"name": "field2", "caption":"Interval", "type": 1}, ];
-      Filters.op_enums = {0 : [[0, "is"], [1, "is not"]], 1 : [[0, "contains"], [1, "does not contain"]]};
+      Filters.fields = [{"name": "field1", "caption": "Priority", "type": 0},
+                        {"name": "field2", "caption": "Interval", "type": 1},
+                        {"name": "field3", "caption": "Type",     "type": 0, "enum": "issue_type"},
+                       ];
+Filters.op_enums = {0 : [[0, "is"], [1, "is not"]], 1 : [[0, "contains"], [1, "does not contain"]]};
+Filters.field_enums = {'issue_type': [['b', 'Bug'], ['f', "Feature"], ['e', 'Enhancement']]};
     </script>
   </body>
 </html>

@@ -8,3 +8,4 @@
 
 * Remove OR filter
 * Add AND button to create new filters group
+* Render enums for field value

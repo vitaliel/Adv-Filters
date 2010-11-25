@@ -2,8 +2,12 @@ var Filters = {
     // [{"name" : "field1", }, {...}]
     fields : [],
 
+    // Operators enums
     // key = type, value => [[id1, value1], [id2, value2]]
     op_enums: {},
+
+    // Field enums, key = enum name, value: select options array
+    field_enums: {},
     group_idx : 1,
     filter_idx: 1,
 
@@ -53,13 +57,17 @@ var Filters = {
 
         // fill value drop down if it is the case && enable
         var field = this.get_field(field_name);
-        var html = '<input type="text" id="' + prefix +'_value" name="'+prefix+'[value]">'
+        var value_c = $("#" + prefix + "_value_c");
 
         if (field["enum"]) {
-            // TODO: get enum and fill it
+          value_c.html('<select id="' + prefix +'_value" name="'+prefix+'[value]"></select>');
+          var field_enum = [["", ""]].concat(this.field_enums[field["enum"]]);
+          var field_select = $("#" + prefix + '_value')[0];
+          $.each(field_enum, function(idx, el) { field_select.add(new Option(el[1], el[0]))});
         }
-
-        $("#" + prefix + "_value_c").html(html);
+        else {
+          value_c.html('<input type="text" id="' + prefix +'_value" name="'+prefix+'[value]">');
+        }
 
         // Add OR button if delete link is not present
         if ($("#" + prefix + "_del").length == 0) {
